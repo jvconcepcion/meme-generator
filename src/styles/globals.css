@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.color-picker {
+  .react-colorful {
+    width: auto;
+    height: 240px;
+  }
+
+  .react-colorful__saturation {
+    border-radius: 4px 4px 0 0;
+  }
+
+  .react-colorful__last-control, .react-colorful__alpha-gradient {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .react-colorful__saturation-pointer {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .react-colorful__hue {
+    height: 1.875rem;
+    border-radius: 0;
+  }
+
+  .react-colorful__hue-pointer, .react-colorful__alpha-pointer {
+    width: 0.5rem;
+    height: 100%;
+    border-radius: 0px;
+    border-top: 0;
+    border-bottom: 0;
+  }
+
+  .react-colorful__alpha-pointer {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+}
+
+.hero-items-container {
+  overflow: hidden;
+  mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+}
+
+.swiper-wrapper {
+  transition-timing-function: linear !important;
+}
+
+.swiper-pagination {
+  display: none;
+}
+
+.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+  background-color: #f13024;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after,
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+  color: #f13024;
+}
+
+@layer base {
+  body {
+    @apply bg-secondary w-full leading-relaxed;
+  }
+
+  .page {
+    @apply h-screen mt-20 sm:mt-0 sm:p-10 xl:p-24 xxl:py-28 xxl:px-[20%] fhd:px-[25%] xl:flex xl:flex-col xl:justify-around;
+  }
+
+  .default-mobile-width {
+    @apply w-full xl:w-[32rem];
+  }
+
+  .header-heading {
+    @apply flex fixed left-0 top-0 w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl 
+    dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30 z-50;
+  }
+
+  .header-logo-container {
+    @apply hidden lg:flex fixed bottom-0 left-0 h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none;
+  }
+
+  .meme-text-editor {
+    @apply bg-white w-full overflow-y-scroll h-auto max-h-96 sm:overflow-y-hidden sm:max-h-none pb-5;
+  }
+
+  .actions-container {
+    @apply flex flex-row items-center default-mobile-width h-[3.75rem];
+  }
+
+  .dropzone {
+    @apply flex items-center w-full cursor-pointer border-[#f4f4f4]/40 border border-dashed p-2 sm:p-5 text-center text-sm h-full justify-center;
+  }
+
+  .meme-canvas {
+    @apply w-full h-auto border border-solid border-[#f4f4f4]/40;
+  }
+
+  .generate-meme-btn {
+    @apply bg-[#131424] hover:bg-[#131424]/80 border-2 border-[#131424] text-white text-sm p-2 sm:p-5 h-full;
+  }
+
+  .toolbar-items {
+    @apply hover:text-accent transition-all duration-300 cursor-pointer;
+  }
+
+  .textfield-container {
+    @apply border-t-[] border-black/30 px-2;
+  }
+
+  .divider-horizontal {
+    @apply block shadow-sm mx-5 my-2;
+  }
+
+  .default-color-tile {
+    @apply rounded-sm w-5 h-5 inline-flex cursor-pointer;
+  }
+}
