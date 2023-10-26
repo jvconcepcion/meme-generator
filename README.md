@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This project is created using [React JS](https://react.dev) and the following:
 
-## Getting Started
+- [Next JS](https://nextjs.org/)
+- [Typescript](https://www.typescriptlang.org)/(https://react.dev/learn/typescript)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Tailwind CSS](https://tailwindcss.com)
+- [imgflip API](https://imgflip.com/api)
 
-First, run the development server:
+This project also use [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Sora, a custom Google Font.
+
+## Installation
+
+Make sure you have the following:
+- Node.js 16.* or later
+- OS such as Windows, MacOS and Linux
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+$ npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Building the app
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# build
+$ npm run build
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# watch mdoe
+$ npm run build:watch
+```
 
-## Learn More
+## Running the app
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# development
+$ npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# prod mode
+$ npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Deploy on Vercel
+## Plan in the future
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Add authentication support (Firebase/Keycloak) 
+- Add NoSQL database support (either mongodb or firebase) to store created memes.
+  - User will be able to view all of his/her created memes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Stay in touch
+
+- Author - Jonathan Concecpion
+- Facebook - [Link](https://m.me/i.am.ye.xiu)
+- Linkedin - [Link](https://linkedin.com/in/jvconcepcion)
+- Instagram - [Link](https://instagram.com/darth.nathan)
+- Twitter - [Link](https://twitter.com/DBAnathan)
