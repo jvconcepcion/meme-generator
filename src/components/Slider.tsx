@@ -5,36 +5,50 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, FreeMode, Pagination } from 'swiper/modules';
 import { RxArrowTopRight } from 'react-icons/rx';
 import { SliderProps } from '@interface/components/slider';
-import { Bar, Cards } from '@components';
+import { Cards } from '@components';
+import { fadeIn, fadeOut } from '@utils/framer-variants';
 
-const serviceData = [
+const slidesData = [
   {
-    title: 'Branding',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: '',
+    link: '',
+    imgLink: ''
   },
   {
-    title: 'Design',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: '',
+    link: '',
+    imgLink: ''
   },
   {
-    title: 'Development',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: '',
+    link: '',
+    imgLink: ''
   },
   {
-    title: 'Copywriting',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: '',
+    link: '',
+    imgLink: ''
   },
   {
-    title: 'SEO',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    title: '',
+    link: '',
+    imgLink: ''
   },
+  {
+    title: '',
+    link: '',
+    imgLink: ''
+  },
+
 ];
 
 const Slider: React.FC<SliderProps> = ({
+  items = slidesData,
   params = {
     breakpoints: {
       320: {
@@ -55,29 +69,45 @@ const Slider: React.FC<SliderProps> = ({
     },
     autoplay: {
       delay: 1,
+      pauseOnMouseEnter: false,
       disableOnInteraction: false,
     }
   }
 }) => {
   const [areSlidesLoaded, setAreSlidesLoaded] = useState<boolean>(false);
 
+  const SliderSkeleton = () => (
+    <div
+      role='status'
+      className='animate-pulse h-48'
+    >
+      <div className='w-full h-48 bg-[rgba(65,47,123,0.15)] rounded-lg' />
+    </div>
+  )
+
   return (
     <>
-      <Swiper
-        {...params}
-        modules={[Autoplay, FreeMode, Pagination]}
-        onInit={() => setAreSlidesLoaded(false)}
-        onAfterInit={() => setAreSlidesLoaded(true)}
-        className={`h-auto ${!areSlidesLoaded && '!hidden'}`}
+      <motion.div
+        variants={fadeIn(areSlidesLoaded)}
+        initial='hidden'
+        animate='visible'
+        className={`h-48 ${!areSlidesLoaded && '!hidden'}`}
       >
-        {serviceData.map((item, i) => (
-          <SwiperSlide key={i}>
-            <Cards title={item.description} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-
-      <Bar />
+        <Swiper
+          {...params}
+          modules={[Autoplay, FreeMode, Pagination]}
+          onInit={() => setAreSlidesLoaded(false)}
+          onAfterInit={() => setAreSlidesLoaded(true)}
+          className='h-full'
+        >
+          {items && items.map((item, i) => (
+            <SwiperSlide key={i}>
+              <Cards {...item} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </motion.div>
+      {!areSlidesLoaded && <SliderSkeleton />}
     </>
   )
 };

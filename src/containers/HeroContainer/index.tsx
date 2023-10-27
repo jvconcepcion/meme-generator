@@ -1,29 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bar, Slider } from '@components';
+import { Slider } from '@components';
 
-const HeroContainer: React.FC = () => {
-  const [memeList, setMemeList] = useState([]);
+const HeroContainer: React.FC<{ [key: string]: any[] }> = ({ memeList = [] }) => {
+  const [memeCollection, setMemeCollection] = useState<any[]>([]);
 
-  // useEffect(() => {
-  //   let mounted = true;
+  useEffect(() => {
+    let mounted = true;
 
-  //   if (mounted) {
+    if (mounted) {
+      if (!memeList) return;
 
-  //     const fetchPosts = async () => {
-  //       const response = await fetch('/api/memes');
-  //       const { data } = await response.json();
-  //       setMemeList(data.memes);
-  //     }
-  //     fetchPosts();
-  //   }
-  // }, [])
+      const memes = memeList.map(({ id, name, url }) => ({ title: name, link: url, imgLink: url }));
+      setMemeCollection(memes)
+    }
+  }, [])
 
   return (
     <section className="mb-32 text-center lg:w-full lg:mb-0">
       <div className='hero-items-container'>
-      <Slider />
+        <Slider items={memeCollection} />
       </div>
     </section>
   )

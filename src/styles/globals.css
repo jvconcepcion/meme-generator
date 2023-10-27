@@ -95,7 +95,7 @@ body {
   }
 
   .page {
-    @apply h-screen mt-20 sm:mt-0 sm:p-10 xl:p-24 xxl:py-28 xxl:px-[20%] fhd:px-[25%] xl:flex xl:flex-col xl:justify-around;
+    @apply h-screen mt-20 sm:mt-0 sm:p-10 xl:p-24 xxl:py-28 xxl:px-[20%] fhd:px-[25%] xl:flex xl:flex-col;
   }
 
   .default-mobile-width {

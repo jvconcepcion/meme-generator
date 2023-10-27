@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  env: {
+    baseUrl: 'http://localhost:3000',
+    imgApiBaseUrl: 'https://api.imgflip.com',
+    notificationTTL: 5000,
+  },
   webpack: (config, { isServer }) => {
     config.externals = [ ...config.externals, {
       sharp: 'commonjs sharp',

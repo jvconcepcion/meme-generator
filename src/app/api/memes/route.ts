@@ -8,8 +8,7 @@ const headers = {
 export const GET = async (): Promise<any> => {
   try {
     const res = await fetch('https://api.imgflip.com/get_memes', {
-      headers,
-      next: { revalidate: 60 },
+      headers
     })
     const data = await res.json()
     return new Response(JSON.stringify(data), { status: 200 })
