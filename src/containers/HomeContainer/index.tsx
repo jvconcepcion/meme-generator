@@ -8,16 +8,13 @@ import { rgbaToHex } from '@utils/helpers';
 import { TextFieldProps } from '@interface/components/textfield';
 import MemeImageEditor from '@containers/HomeContainer/MemeImageEditor';
 import MemeTextEditor from '@containers/HomeContainer/MemeTextEditor';
+import { ICustomTextboxOptions } from '@interface/containers/home-container';
 
 const HomeContainer: React.FC = () => {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<fabric.Canvas | null>(null);
 
   const [image, setImage] = useState<string | null>(null);
-  const [canvasSize, setCanvasSize] = useState<{ [key: string]: number }>({
-    width: 0,
-    height: 0
-  });
   const [textScale, setTextScale] = useState<{ [key: string]: number }>({
     scale: 0,
     position: 0.05
@@ -41,7 +38,6 @@ const HomeContainer: React.FC = () => {
       onChange: (e) => handleInputChange(e, 'second'),
     }
   ])
-  const { width, height } = canvasSize;
 
   const handleDrop = (acceptedFiles: File[], fileRejections: FileRejection[]) => {
     setImage(null);
@@ -60,59 +56,73 @@ const HomeContainer: React.FC = () => {
   const handleSaveMeme = (newImg: string | null) => {
     if (!newImg) return;
     if (!canvasContainerRef.current) return;
-    let canvas: fabric.Canvas;
-    // Set up the Fabric.js canvas
-    if (canvasRef.current) {
-      canvas = canvasRef.current;
-    } else {
-      canvas = new fabric.Canvas('memeCanvas', {
-        width: width,
-        height: height,
-      });
+    const containerStyle = canvasContainerRef.current.style;
 
-      canvasRef.current = canvas;
-    }
-
-    // Ensure the image and canvas are available
-    if (!newImg) return;
-
-    // fabric.Image.fromURL(imgElement.src, (img) => {
     fabric.Image.fromURL(newImg, (img) => {
-      const canvasScaleFactor = width / (img?.width || 1);
+      let canvas: fabric.Canvas;
+      const uploadedWidth = Math.min(490, img.width!);
+      const uploadedHeight = Math.max(370, (img.width! / img.width!) * img.height!);
 
-      img.scaleToWidth(width);
+      containerStyle.height = uploadedHeight + 'px';
 
-      const textObjects: fabric.Textbox[] = [];
-      let position: number = textScale.position;
-
-      Object.keys(inputValues).forEach((value, i) => {
-        position = i > 0
-          ? (i + 4) * textScale.position
-          : (i + 1) * textScale.position;
-
-        const textObject = new fabric.Textbox(inputValues[value].toUpperCase(), {
-          name: value,
-          fontSize: width * 0.05 * canvasScaleFactor,
-          top: height * position * canvasScaleFactor,
-          width: width * canvasScaleFactor,
-          textAlign: 'center',
-          fill: '#FFFFFF',
+      // Set up the Fabric.js canvas
+      if (canvasRef.current) {
+        canvas = canvasRef.current;
+        canvas.setDimensions({
+          width: uploadedWidth,
+          height: uploadedHeight,
+        });
+      } else {
+        canvas = new fabric.Canvas('memeCanvas', {
+          width: uploadedWidth,
+          height: uploadedHeight,
         });
 
-        textObjects.push(textObject);
-      });
+        canvasRef.current = canvas;
+      }
 
-      setTextScale({ scale: canvasScaleFactor, position })
-
-      // Clear the existing canvas
-      canvas.clear()
+      const scaleFactor = 490 / uploadedWidth;
+      // img.scale(scaleFactor);
 
       // disable selection of the edited image
       img.selectable = false;
       img.evented = false;
 
       // Add objects to canvas
-      canvas.add(img);
+      canvas.clear().add(img);
+      const textObjects: fabric.Textbox[] = [];
+      let position: number = textScale.position;
+
+      Object.keys(inputValues).forEach((value, i) => {
+        position = i > 0
+          ? (i + 2) * textScale.position
+          : (i + 1) * textScale.position;
+
+        // Calculate the font size based on the canvas size
+        const fontSize = Math.min(uploadedWidth, uploadedHeight) * 0.04 * scaleFactor;
+
+        // Calculate the vertical position based on the canvas size and textScale.position
+        const verticalPosition = uploadedHeight * position * scaleFactor;
+
+        const textObject = new fabric.Textbox(inputValues[value].toUpperCase(), {
+          name: value,
+          fontSize,
+          top: verticalPosition,
+          width: uploadedWidth,
+          textAlign: 'center',
+          fill: '#FFFFFF',
+          clipTo: (ctx) => {
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.rect(0, 0, uploadedWidth, uploadedHeight); // Clip to the image boundaries
+            ctx.restore();
+          },
+        } as ICustomTextboxOptions);
+
+        textObjects.push(textObject);
+      });
+
+      setTextScale({ scale: scaleFactor, position })
       textObjects.forEach((textObject) => {
         canvas.add(textObject);
       });
@@ -150,6 +160,7 @@ const HomeContainer: React.FC = () => {
     if (!canvas) return;
 
     const getObjects = canvas.getObjects();
+    console.log(getObjects)
     const activeObjects = canvas.getActiveObjects();
     if (activeObjects.length > 0) {
       activeObjects.forEach((obj, i) => {
@@ -200,18 +211,37 @@ const HomeContainer: React.FC = () => {
       onChange: (e) => handleInputChange(e, id),
     };
 
-    let position = 0.2 + textScale.position;
-    const newCanvasTextObj = new fabric.Textbox(id.toUpperCase(), {
-      name: id,
-      fontSize: width * 0.05 * textScale.scale,
-      top: height * position * textScale.scale,
-      width: width * textScale.scale,
-      textAlign: 'center',
-      fill: '#FFFFFF',
-    });
-    canvas.add(newCanvasTextObj);
-    canvas.renderAll();
+    if (!image) return;
 
+    let position = 0.1 + textScale.position;
+    fabric.Image.fromURL(image, (img) => {
+
+      const width = canvas.width!;
+      const height = canvas.height!;
+      const scaleFactor = 490 / width;
+      // Calculate the font size based on the canvas size
+      const fontSize = Math.min(width, height) * 0.04 * scaleFactor;
+
+      // Calculate the vertical position based on the canvas size and textScale.position
+      const verticalPosition = height * position * scaleFactor;
+
+      const newCanvasTextObj = new fabric.Textbox(id.toUpperCase(), {
+        name: id,
+        fontSize,
+        top: verticalPosition,
+        width,
+        textAlign: 'center',
+        fill: '#FFFFFF',
+        clipTo: (ctx) => {
+          ctx.save();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.rect(0, 0, width, height); // Clip to the image boundaries
+          ctx.restore();
+        },
+      } as ICustomTextboxOptions);
+      canvas.add(newCanvasTextObj);
+      canvas.renderAll();
+    });
     setTextScale((prevState) => ({ ...prevState, position }))
     setInputValues((prevValues) => ({ ...prevValues, [id]: '' }));
     setTextfields([...textfields, newTextfield]);
@@ -260,19 +290,56 @@ const HomeContainer: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!canvasContainerRef.current) return;
+    if (!canvasRef.current) return;
+    console.log('canvas activated ')
+    const canvas = canvasRef.current;
 
-    const width = canvasContainerRef.current.clientWidth;
-    const height = (width * 2) / 3; // Maintain 3:2 aspect ratio
-    setCanvasSize({ width, height });
-  }, [canvasContainerRef])
+    // Add event listener for object moving
+    canvas.on('object:moving', (options) => {
+      console.log("moving")
+      const modifiedObject = options.target as fabric.Textbox;
+
+      // Get the canvas boundaries
+      const canvasWidth = canvas.width!;
+      const canvasHeight = canvas.height!;
+
+      // Check if the modified object is a text object
+      if (modifiedObject.type === 'textbox') {
+        // Calculate the boundaries for the text object
+        const textObjectLeft = modifiedObject.left!;
+        const textObjectTop = modifiedObject.top!;
+        const textObjectWidth = modifiedObject.getScaledWidth();
+        const textObjectHeight = modifiedObject.getScaledHeight();
+
+        // Adjust the position to keep the text within the canvas
+        const adjustedLeft = Math.max(0, Math.min(canvasWidth - textObjectWidth, textObjectLeft));
+        const adjustedTop = Math.max(0, Math.min(canvasHeight - textObjectHeight, textObjectTop));
+
+        // Set the adjusted position
+        modifiedObject.set({
+          left: adjustedLeft,
+          top: adjustedTop,
+        });
+
+        // Update the canvas
+        canvas.renderAll();
+      }
+    });
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      canvas.off('object:moving');
+    };
+  }, [canvasRef.current])
 
   return (
     <section className='container mx-auto p-3'>
-      <div className='flex flex-col gap-2 xl:flex-row xl:h-[25.625rem]'>
-        <div className='flex flex-col items-center gap-2'>
-          <div ref={canvasContainerRef} className='default-mobile-width aspect-[3/2]'>
-            <canvas id='memeCanvas' className='meme-canvas aspect-[3/2]'></canvas>
+      {/* <div className='flex flex-col gap-2 xl:flex-row xl:h-[25.625rem]'> */}
+      <div className='flex flex-col gap-2 xl:flex-row'>
+        {/* <div className='flex flex-col gap-2 xl:flex-row'> */}
+        <div className='flex flex-col'>
+          <div ref={canvasContainerRef} className='w-full h-80 xl:w-[30.625rem] xl:h-[23.125rem]'>
+            <canvas id='memeCanvas' className='meme-canvas w-full h-full'></canvas>
           </div>
           <div className='actions-container'>
             <Dropzone onDrop={handleDrop}>

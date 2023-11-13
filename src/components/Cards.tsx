@@ -31,7 +31,7 @@ const Cards: React.FC<CardsProps> = ({
         target='_blank'
       >
         <RxArrowTopRight
-          className='group-hover:rotate-45 group-hover:text-accent transition-all duration-300 drop-shadow-md'
+          className='group-hover:rotate-45 group-hover:text-accent transition-all duration-300'
         />
       </Link>
     </div>

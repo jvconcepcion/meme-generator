@@ -91,11 +91,11 @@ body {
 
 @layer base {
   body {
-    @apply bg-secondary w-full leading-relaxed;
+    @apply bg-secondary w-full flex flex-col justify-between leading-relaxed h-screen;
   }
 
   .page {
-    @apply h-screen mt-20 sm:mt-0 sm:p-10 xl:p-24 xxl:py-28 xxl:px-[20%] fhd:px-[25%] xl:flex xl:flex-col;
+    @apply h-auto mt-20 sm:mt-0 sm:p-10 xl:p-24 xxl:py-28 xxl:px-[20%] fhd:px-[25%] xl:flex xl:flex-col;
   }
 
   .default-mobile-width {
@@ -112,11 +112,12 @@ body {
   }
 
   .meme-text-editor {
-    @apply bg-white w-full overflow-y-scroll h-auto max-h-96 sm:overflow-y-hidden sm:max-h-none pb-5;
+    @apply bg-white w-full overflow-y-scroll sm:overflow-y-hidden sm:max-h-none pb-5;
+    /* @apply bg-white w-full overflow-y-scroll h-auto max-h-96 sm:overflow-y-hidden sm:max-h-none pb-5; */
   }
 
   .actions-container {
-    @apply flex flex-row items-center default-mobile-width h-[3.75rem];
+    @apply flex flex-row items-center w-full h-[3.75rem];
   }
 
   .dropzone {

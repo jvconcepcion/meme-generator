@@ -22,4 +22,8 @@ export interface ImageEditorProps {
   }
 };
 
+export interface ICustomTextboxOptions extends fabric.ITextboxOptions {
+  clipTo?: (ctx: CanvasRenderingContext2D) => void;
+};
+
 // export type CustomTextboxProps = fabric.Textbox & { id: string };

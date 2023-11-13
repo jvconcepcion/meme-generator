@@ -25,10 +25,10 @@ export default function RootLayout({
         <div className={`page text-white bg-cover bg-no-repeat ${sora.variable} font-sora relative`}>
           <Header />
           {children}
-          <Footer>
+        </div>
+          <Footer copyRightLabel='2023 Jonathan Concepcion. All Rights Reserved.'>
 
           </Footer>
-        </div>
       </body>
     </html>
   )

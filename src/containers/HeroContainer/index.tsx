@@ -18,7 +18,7 @@ const HeroContainer: React.FC<{ [key: string]: any[] }> = ({ memeList = [] }) =>
   }, [])
 
   return (
-    <section className="mb-32 text-center lg:w-full lg:mb-0">
+    <section className="mb-[15px] text-center lg:w-full lg:mb-0">
       <div className='hero-items-container'>
         <Slider items={memeCollection} />
       </div>
