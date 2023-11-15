@@ -11,6 +11,11 @@ export interface TextEditorProps {
   };
 };
 
+export interface InitialStateProps {
+  testScale: { [key: string]: number };
+  textfields: TextFieldProps[];
+}
+
 export interface ImageEditorProps {
   config: {
     uploadedImage: string | null;

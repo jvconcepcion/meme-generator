@@ -8,36 +8,39 @@ import { rgbaToHex } from '@utils/helpers';
 import { TextFieldProps } from '@interface/components/textfield';
 import MemeImageEditor from '@containers/HomeContainer/MemeImageEditor';
 import MemeTextEditor from '@containers/HomeContainer/MemeTextEditor';
-import { ICustomTextboxOptions } from '@interface/containers/home-container';
+import { ICustomTextboxOptions, InitialStateProps } from '@interface/containers/home-container';
 
 const HomeContainer: React.FC = () => {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<fabric.Canvas | null>(null);
 
   const [image, setImage] = useState<string | null>(null);
-  const [textScale, setTextScale] = useState<{ [key: string]: number }>({
-    scale: 0,
-    position: 0.05
-  })
   const [inputValues, setInputValues] = useState<{ [key: string]: string }>({
     first: 'First Text',
     second: 'Second Text',
   });
   const [toggleModal, setToggleModal] = useState<boolean>(false);
-  const [textfields, setTextfields] = useState<TextFieldProps[]>([
-    {
-      id: 'first',
-      labelName: 'First Text',
-      value: inputValues['first'] || '',
-      onChange: (e) => handleInputChange(e, 'first'),
-    },
-    {
-      id: 'second',
-      labelName: 'Second Text',
-      value: inputValues['second'] || '',
-      onChange: (e) => handleInputChange(e, 'second'),
-    }
-  ])
+
+  const initialState: InitialStateProps = {
+    testScale: { scale: 0, position: 0.05 },
+    textfields: [
+      {
+        id: 'first',
+        labelName: 'First Text',
+        value: inputValues['first'] || '',
+        onChange: (e) => handleInputChange(e, 'first'),
+      },
+      {
+        id: 'second',
+        labelName: 'Second Text',
+        value: inputValues['second'] || '',
+        onChange: (e) => handleInputChange(e, 'second'),
+      }
+    ]
+  };
+
+  const [textScale, setTextScale] = useState(initialState.testScale);
+  const [textfields, setTextfields] = useState(initialState.textfields);
 
   const handleDrop = (acceptedFiles: File[], fileRejections: FileRejection[]) => {
     setImage(null);
@@ -45,7 +48,8 @@ const HomeContainer: React.FC = () => {
     reader.onload = () => {
       if (reader.result && typeof reader.result === 'string') {
         setImage(reader.result);
-        setTextScale({ scale: 0, position: 0.05 });
+        setTextScale(initialState.testScale);
+        setTextfields(initialState.textfields);
         setInputValues({ first: 'First Text', second: 'Second Text', });
       };
     };
@@ -291,12 +295,10 @@ const HomeContainer: React.FC = () => {
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    console.log('canvas activated ')
     const canvas = canvasRef.current;
 
     // Add event listener for object moving
     canvas.on('object:moving', (options) => {
-      console.log("moving")
       const modifiedObject = options.target as fabric.Textbox;
 
       // Get the canvas boundaries
